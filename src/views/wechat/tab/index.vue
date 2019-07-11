@@ -6,3 +6,12 @@
     <el-tab-pane label="定时任务补偿">设置</el-tab-pane>
   </el-tabs>
 </template>
+<script>
+export default {
+  name: 'WechatTab',
+  props: {
+    botId: String,
+    puid: String
+  }
+}
+</script>
