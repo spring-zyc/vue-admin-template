@@ -32,7 +32,7 @@ const actions = {
   },
 
   // get all wx bot
-  list({ commit, state }) {
+  list({ commit }) {
     return new Promise((resolve, reject) => {
       list().then(response => {
         const { data } = response
