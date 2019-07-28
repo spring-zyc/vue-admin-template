@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  import { getGroupSetings, updateGroupSetings } from '../../api/api';
+  import { getGroupSetings, updateGroupSetings } from '../../../api/api'
   export default {
     data() {
       return {

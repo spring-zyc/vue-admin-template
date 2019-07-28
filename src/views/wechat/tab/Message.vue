@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { getMsgList } from '@/api/api'
+import { getMsgList } from '../../../api/api'
 // import { isEmptyObject } from '../common/js/util'
 
 export default {

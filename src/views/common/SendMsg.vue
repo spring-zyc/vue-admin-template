@@ -63,7 +63,7 @@
         <h4>选择要发送的群聊：</h4>
         <el-transfer filterable :filter-method="filterMethod" filter-placeholder="请输入群聊昵称" v-model="ids" :data="allGroups" :titles="['群聊列表', '已选群聊']">
         </el-transfer>
-      </div> 
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="submit">确 定</el-button>
@@ -76,157 +76,157 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import '../../plugins/emoji/src/assets/css/iconfont.css'
-  import vueEmoji from '../../plugins/emoji/src/components/emoji.vue'
-  import { getUserList, getAllGroups, sendMessage } from '../../api/api';
+import Vue from 'vue'
+import '../../plugins/emoji/src/assets/css/iconfont.css'
+import vueEmoji from '../../plugins/emoji/src/components/emoji.vue'
+import { getUserList, getAllGroups, sendMessage } from '../../api/api'
 
-  Vue.component('msg-item', {
-    functional: true,
-    render: function (h, ctx) {
-      var item = ctx.props.item;
-      return h('li', ctx.data, [
-        h('img', { attrs: { style: 'float: left; width: 38px; padding: 2px; margin-right: 5px',
-                            src: item.avatar } }),
-        h('span', { attrs: { style: '' } }, [item.label])
-      ]);
-    },
-    props: {
-      item: { type: Object, required: true }
+Vue.component('msg-item', {
+  functional: true,
+  render: function (h, ctx) {
+    var item = ctx.props.item;
+    return h('li', ctx.data, [
+      h('img', { attrs: { style: 'float: left; width: 38px; padding: 2px; margin-right: 5px',
+                          src: item.avatar } }),
+      h('span', { attrs: { style: '' } }, [item.label])
+    ]);
+  },
+  props: {
+    item: { type: Object, required: true }
+  }
+});
+
+export default {
+  data() {
+    return {
+      content: '',
+      showEmoji: false,
+      dialogVisible: false,
+      ids: [],
+      fileList: [],
+      sendType: false,
+      gid: '',
+      emojiList: [],
+      curOptions: [],
+      group: '',
+      groups: [],
+      allMembers: [],
+      allGroups: [],
+      filterMethod(query, item) {
+         return item.label.indexOf(query) > -1;
+      },
     }
-  });
-
-	export default {
-		data() {
-      return {
-        content: '',
-        showEmoji: false,
-        dialogVisible: false,
-        ids: [],
-        fileList: [],
-        sendType: false,
-        gid: '',
-        emojiList: [],
-        curOptions: [],
-        group: '',
-        groups: [],
-        allMembers: [],
-        allGroups: [],
-        filterMethod(query, item) {
-           return item.label.indexOf(query) > -1;
-        },
-      }
-		},
-    props: ['queryType'],
-		methods: {
-      getMembers () {
-         const users = [];
-         let para = {
-           gid: this.gid,
-           page: 0,
-           q: '',
-           type: this.queryType
-         };
-         getUserList(para).then((res) => {
-            res.data.users.forEach((member, index) => {
-              users.push({
-                label: member.nick_name,
-                key: member.id
-              });
+  },
+  props: ['queryType'],
+  methods: {
+    getMembers () {
+       const users = [];
+       let para = {
+         gid: this.gid,
+         page: 0,
+         q: '',
+         type: this.queryType
+       };
+       getUserList(para).then((res) => {
+          res.data.users.forEach((member, index) => {
+            users.push({
+              label: member.nick_name,
+              key: member.id
             });
-            this.allMembers = users;
           });
-      },
-      selectEmoji (code) {
-        this.emojiList.push(code);
-        this.showEmoji = false
-        this.content += code
-      },
-      handleSelectGroup(item) {
-        this.gid = item.key;
-        this.getMembers();
-      },
-      handleChange(_, fileList) {
-        this.fileList = fileList;
-      },
-      handleRemove(_, fileList) {
-        this.fileList = fileList;
-      },
-      submit () {
-        let content = this.content
-        this.emojiList.forEach((code, index) => {
-          content = content.replace(code, `[${ code.slice(1, -1).replace(/\b\w/g, l => l.toUpperCase())
-            }]`);
+          this.allMembers = users;
         });
-        let para = {
-          type: this.queryType,
-          gid: this.gid || '',
-          content: this.content,
-          ids: this.ids,
-          send_type: this.sendType ? 'group': 'contact',
-          files: this.fileList.map(item => item.name)
-        }
-        sendMessage(para).then((res) => {
-          this.$checkStatus(res);
-          this.content = ''
-          this.fileList = []
-        });
-        this.dialogVisible = false
-      },
-      querySearch(query, cb) {
-        let groups = this.allGroups;
-        var results = query ? groups.filter(this.createFilter(query)) : groups;
-        cb(results);
-      },
-      createFilter(query) {
-        return (item) => {
-          return item.label.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-        }
-      }
-		},
-    components: {
-      vueEmoji
     },
-    mounted() {
-      let getMembers = true;
-      let type = this.queryType;
-      let ids = this.$route.query['ids'] || '';
-      if ('type' in this.$route.query) {
-        type = this.$route.query['type']
+    selectEmoji (code) {
+      this.emojiList.push(code);
+      this.showEmoji = false
+      this.content += code
+    },
+    handleSelectGroup(item) {
+      this.gid = item.key;
+      this.getMembers();
+    },
+    handleChange(_, fileList) {
+      this.fileList = fileList;
+    },
+    handleRemove(_, fileList) {
+      this.fileList = fileList;
+    },
+    submit () {
+      let content = this.content
+      this.emojiList.forEach((code, index) => {
+        content = content.replace(code, `[${ code.slice(1, -1).replace(/\b\w/g, l => l.toUpperCase())
+          }]`);
+      });
+      let para = {
+        type: this.queryType,
+        gid: this.gid || '',
+        content: this.content,
+        ids: this.ids,
+        send_type: this.sendType ? 'group': 'contact',
+        files: this.fileList.map(item => item.name)
       }
-      if ('send_type' in this.$route.query) {
-          this.sendType = true
+      sendMessage(para).then((res) => {
+        this.$checkStatus(res);
+        this.content = ''
+        this.fileList = []
+      });
+      this.dialogVisible = false
+    },
+    querySearch(query, cb) {
+      let groups = this.allGroups;
+      var results = query ? groups.filter(this.createFilter(query)) : groups;
+      cb(results);
+    },
+    createFilter(query) {
+      return (item) => {
+        return item.label.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1;
       }
-      if (ids) {
-        this.ids = ids.split(',');
-      }
+    }
+  },
+  components: {
+    vueEmoji
+  },
+  mounted() {
+    let getMembers = true;
+    let type = this.queryType;
+    let ids = this.$route.query['ids'] || '';
+    if ('type' in this.$route.query) {
+      type = this.$route.query['type']
+    }
+    if ('send_type' in this.$route.query) {
+        this.sendType = true
+    }
+    if (ids) {
+      this.ids = ids.split(',');
+    }
 
-      if (type === 'group') {
-        let gid = this.$route.query['gid'] || '';
-        getAllGroups().then((res) => {
-          let groups = [];
-          res.data.groups.forEach((member, index) => {
-               groups.push({
-                 label: member.nick_name,
-                 key: member.id,
-                 value: member.nick_name,
-                 avatar: member.avatar
-               });
+    if (type === 'group') {
+      let gid = this.$route.query['gid'] || '';
+      getAllGroups().then((res) => {
+        let groups = [];
+        res.data.groups.forEach((member, index) => {
+             groups.push({
+               label: member.nick_name,
+               key: member.id,
+               value: member.nick_name,
+               avatar: member.avatar
              });
-             this.allGroups = groups;
-        });
-        if (gid) {
-          this.gid = gid;
-          getMembers = true;
-        } else {
-          getMembers = false; 
-        }
+           });
+           this.allGroups = groups;
+      });
+      if (gid) {
+        this.gid = gid;
+        getMembers = true;
+      } else {
+        getMembers = false;
       }
-      if (getMembers) {
-        this.getMembers();
-      }
-	}
+    }
+    if (getMembers) {
+      this.getMembers();
+    }
+}
 }
 </script>
 

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { getGroupList, removeGroup, batchRemoveGroup, flushData } from '../../api/api'
+import { getGroupList, removeGroup, batchRemoveGroup, flushData } from '../../../api/api'
 
 export default {
   data() {
