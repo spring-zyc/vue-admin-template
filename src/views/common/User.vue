@@ -29,7 +29,7 @@
         <template scope="scope">
           <img :src="scope.row.avatar" class="avatar"/>
         </template>
-      </el-table-column> 
+      </el-table-column>
 			<el-table-column prop="nick_name" label="昵称" width="150" sortable>
 			</el-table-column>
 			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
@@ -125,7 +125,7 @@
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
 			},
       sendMsg () {
-        var ids = this.sels.map(item => item.id).toString(); 
+        var ids = this.sels.map(item => item.id).toString();
         this.$router.push({ path: '/send_msg/contact',
             query: { ids: ids, type: this.queryType, gid: this.gid || '' }})
       },
@@ -175,7 +175,7 @@
                title: 'Success',
                message: '任务已发出，请稍后刷新页面',
                type: 'success'
-             }); 
+             });
            });
          });
       },
