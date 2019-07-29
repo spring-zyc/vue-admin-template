@@ -21,6 +21,7 @@ export default {
   },
   data() {
   return {
+    bots:{},
     editableTabsValue: '2',
     editableTabs: [{
       title: 'Tab 1',
@@ -67,10 +68,7 @@ export default {
       this.editableTabsValue = activeName;
       this.editableTabs = tabs.filter(tab => tab.name !== targetName);
     }
-  },
-    mounted(){
-      this.%store.dispatch()
-    }
+  }
 }
 }
 </script>

@@ -15,8 +15,8 @@ import setting from './Setting'
 export default {
   name: 'WechatTab',
   props: {
-    botId: String,
-    puid: String
+    botId: String,//服务器生成的uuid
+    puid: String  //wxpy生成的uuid
   },
   components: {
     user,
