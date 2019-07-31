@@ -119,7 +119,7 @@
 
 			}
 		},
-    props: ['queryType', 'gid'],
+    props: ['queryType', 'gid','puid'],
 		methods: {
 			formatSex (row, column) {
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';

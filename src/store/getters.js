@@ -4,6 +4,8 @@ const getters = {
   token: state => state.user.token,
   avatar: state => state.user.avatar,
   name: state => state.user.name,
-  wechat: state => state.wechat.weChat
+  wechat: state => state.wechat.weChat,
+  tabName: state => state.wechat.tabName,
+  tabIndex: state => state.wechat.tabindex
 }
 export default getters

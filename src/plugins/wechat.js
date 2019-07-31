@@ -1,5 +1,6 @@
 import Vue from 'vue'
 
+
 function checkStatus(res, options = {}) {
   let { r, msg } = res.data
   let type, message
@@ -17,13 +18,15 @@ function checkStatus(res, options = {}) {
 }
 
 function eventSourceListener() {
-  let source = new EventSource('/stream')
+  const base = process.env.VUE_APP_BASE_API
+  const url = base + '/stream'
+  let source = new EventSource(url)
   let self = this
   source.addEventListener('login', function(event) {
     let data = JSON.parse(event.data)
     if (data.type == 'scan_qr_code') {
       self.uuid = data.uuid
-      self.qrCode = `data:image/png;base64,${data.extra}`//二维码
+      self.qrCode = `data:image/png;base64,${base}${ data.extra}`//二维码
     } else if (data.type == 'confirm_login') {
       self.sub_title = 'Scan successful'
       self.sub_desc = 'Confirm login on mobile WeChat'
@@ -53,7 +56,7 @@ export default {
       data: function() {
         return {
           uuid: '',
-          qrCode: `/static/img/qr_code.gif`,
+          qrCode: `${process.env.VUE_APP_BASE_API}/static/img/qr_code.gif`,
           sub_title: 'Scan to log in to WeChat',
           sub_desc: 'Log in on phone to use WeChat on Web',
           notificationCount: 0

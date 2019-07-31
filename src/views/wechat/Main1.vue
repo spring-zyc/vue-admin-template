@@ -27,15 +27,17 @@
         <el-button @click="logout" />
       </div>
     </div>
-    <el-tabs v-model="editableTabsValue" type="card" editable @edit="handleTabsEdit">
+    <el-tabs v-model="currentTabName" type="card" editable @edit="handleTabsEdit">
 
       <el-tab-pane
-        v-for="(item, index) in editableTabs"
+        v-for="(item, index) in bots"
         :key="index"
         :name="item.name"
+        :label="item.nick"
       >
-        <span slot="label"><i class="el-icon-date" /> {{ item.title }}</span>
-        <wechat-tab />
+        <span slot="label"><img :src="item.avatar"/> {{ item.nick + item.id}}</span>
+        <wechat-tab v-if="item.id" :puid="item.id"/>
+        <wechat-login v-else></wechat-login>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -43,30 +45,36 @@
 
 <script>
 import WechatTab from './tab/index'
+import WechatLogin from './Login'
 
 export default {
-  comments: {
-    WechatTab
+  components: {
+    WechatTab,
+    WechatLogin
   },
-  components: { WechatTab },
   data() {
     return {
-      editableTabsValue: '2',
-      editableTabs: [{
-        title: 'Tab 1',
-        name: '1',
-        content: 'Tab 1 content'
-      }, {
-        title: 'Tab 2',
-        name: '2',
-        content: 'Tab 2 content'
-      }],
-      tabIndex: 2
+    }
+  },
+  computed:{
+    bots(){
+      return this.$store.getters.wechat
+    },
+    currentTabName:{
+      get(){
+        return this.$store.getters.tabName
+      }
+    ,
+      set(tabName){
+        this.$store.commit('wechat/SET_TABNAME',tabName)
+      }
     }
   },
   async mounted() {
     try {
       await this.$store.dispatch('wechat/list')
+      this.$eventSourceListener()
+      await this.$store.dispatch('wechat/login')
     } catch (e) {
       console.log(e)
     }
@@ -75,13 +83,8 @@ export default {
 
     handleTabsEdit(targetName, action) {
       if (action === 'add') {
-        const newTabName = ++this.tabIndex + ''
-        this.editableTabs.push({
-          title: 'New Tab',
-          name: newTabName,
-          content: 'New Tab content'
-        })
-        this.editableTabsValue = newTabName
+
+        this.$store.dispatch('wechat/login').then().catch(err => console.log(err))
       }
       if (action === 'remove') {
         const tabs = this.editableTabs

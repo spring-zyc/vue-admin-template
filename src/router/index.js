@@ -45,7 +45,7 @@ export const constantRoutes = [
 
   {
     path: '/',
-    component: () => import('@/views/wechat/Main')
+    component: () => import('@/views/wechat/Main1')
   },
 
   // 404 page must be placed at the end !!!

@@ -3,7 +3,7 @@
     <div class="login">
         <div class="login_box">
             <div class="qrcode">
-                <img class="img" :src="this.qrCode">
+                <img class="img" :src="qrCode">
                 <div>
                     <p class="sub_title">{{sub_title}}</p>
                     <p class="sub_desc">{{sub_desc}}</p>
@@ -11,18 +11,19 @@
             </div>
         </div>
     </div>
-    <div class="github">
-      <a class="lang-item" href="https://github.com/dongweiming/wechat-admin">Github</a>
-    </div>
-    <div class="copyright">
-        <p class="desc">&copy; Wechat-Vue-Admin Team. All Rights </p>
-    </div>
+    <!--<div class="github">-->
+      <!--<a class="lang-item" href="https://github.com/dongweiming/wechat-admin">Github</a>-->
+    <!--</div>-->
+    <!--<div class="copyright">-->
+        <!--<p class="desc">&copy; Wechat-Vue-Admin Team. All Rights </p>-->
+    <!--</div>-->
 </div>
 </template>
 
 <script>
-import { requestLogin } from '../api/api';
+import { requestLogin } from '../../api/api';
   export default {
+    name: 'WechatLogin',
     methods: {
       validate(res) {
           let { msg, r } = res.data
@@ -34,16 +35,7 @@ import { requestLogin } from '../api/api';
               return false;
           }
           return true;
-      },
-      login() {
-          this.$eventSourceListener()
-          requestLogin().then(res => {
-              this.validate(res)
-          })
       }
-    },
-    mounted() {
-      this.login()
     }
   }
 </script>

@@ -2,28 +2,55 @@ import { login, logout, list } from '@/api/wechat'
 import { setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
+/*
+每个微信账户对应一个对象：
+{
+'id': id,//puid
+'avatar': url,
+'name': user_.nick_name,
+'new': False
+}
+*/
 const state = {
-  weChat: []
+  weChat: [],
+  tabName: '1',//当前tab name
+  tabIndex: 1, //当前tab index
+  loginning: false //正在登录
 }
 
 const mutations = {
   ADD_WECHAT: (state, wechat) => {
     state.weChat.push(wechat)
   },
+  UPD_WECHAT: (state, wechat) => {
+    state.weChat[state.tabIndex] = wechat
+  },
   SET_WECHAT: (state, wechats) => {
     state.weChat = wechats
+  },
+  SET_TABNAME: ( state, tabName) => {
+    state.tabName = tabName
+  },
+  SET_TABINDEX: ( state, tabIndex) => {
+    state.tabIndex = tabIndex
   }
 }
 
 const actions = {
   // init wechats
-  initWechats({ commit }, userInfo) {
-    const { username, password } = userInfo
+  login({ commit, state }) {
+    const newTabName = ++state.tabIndex + ''
+    state.tabName = newTabName
+    commit('ADD_WECHAT', {
+      name: newTabName,
+      nick: '新微信登录',
+      id: null,
+      avatar: null
+    })
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login().then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('UPD_WECHAT', newBot)
         resolve()
       }).catch(error => {
         reject(error)
