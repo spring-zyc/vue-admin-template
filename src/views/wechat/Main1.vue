@@ -35,7 +35,7 @@
         :name="item.name"
         :label="item.nick"
       >
-        <span slot="label"><img :src="item.avatar"/> {{ item.nick + item.id}}</span>
+        <span slot="label"><img :src="item.avatar" height="18" width="18"/> {{ item.nick }}</span>
         <wechat-tab v-if="item.id" :puid="item.id"/>
         <wechat-login v-else></wechat-login>
       </el-tab-pane>
@@ -48,13 +48,10 @@ import WechatTab from './tab/index'
 import WechatLogin from './Login'
 
 export default {
+  name:'Main',
   components: {
     WechatTab,
     WechatLogin
-  },
-  data() {
-    return {
-    }
   },
   computed:{
     bots(){
@@ -73,7 +70,6 @@ export default {
   async mounted() {
     try {
       await this.$store.dispatch('wechat/list')
-      this.$eventSourceListener()
       await this.$store.dispatch('wechat/login')
     } catch (e) {
       console.log(e)

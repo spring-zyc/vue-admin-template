@@ -1,6 +1,6 @@
 import { login, logout, list } from '@/api/wechat'
 import { setToken, removeToken } from '@/utils/auth'
-import { resetRouter } from '@/router'
+
 
 /*
 每个微信账户对应一个对象：
@@ -13,8 +13,8 @@ import { resetRouter } from '@/router'
 */
 const state = {
   weChat: [],
-  tabName: '1',//当前tab name
-  tabIndex: 1, //当前tab index
+  tabName: '',//当前tab name
+  tabIndex: -1, //当前tab index
   loginning: false //正在登录
 }
 
@@ -23,7 +23,7 @@ const mutations = {
     state.weChat.push(wechat)
   },
   UPD_WECHAT: (state, wechat) => {
-    state.weChat[state.tabIndex] = wechat
+    state.weChat.splice(state.tabIndex, 1, wechat)
   },
   SET_WECHAT: (state, wechats) => {
     state.weChat = wechats
@@ -33,6 +33,9 @@ const mutations = {
   },
   SET_TABINDEX: ( state, tabIndex) => {
     state.tabIndex = tabIndex
+  },
+  SET_LOGIN: ( state, loginning) => {
+    state.loginning = loginning
   }
 }
 
@@ -48,11 +51,16 @@ const actions = {
       avatar: null
     })
     return new Promise((resolve, reject) => {
+
       login().then(response => {
         const { data } = response
-        commit('UPD_WECHAT', newBot)
-        resolve()
+        console.log('login finished ----',data)
+        state.tabName = data.nick
+        commit('UPD_WECHAT', data)
+        state.loginning = false
+        resolve(data)
       }).catch(error => {
+        state.loginning = false
         reject(error)
       })
     })
@@ -75,7 +83,8 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({ commit, state }, tabName) {
+
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')

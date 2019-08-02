@@ -24,13 +24,16 @@ function eventSourceListener() {
   let self = this
   source.addEventListener('login', function(event) {
     let data = JSON.parse(event.data)
+
     if (data.type == 'scan_qr_code') {
       self.uuid = data.uuid
-      self.qrCode = `data:image/png;base64,${base}${ data.extra}`//二维码
+      self.qrCode = `data:image/png;base64,${ data.extra}`//二维码
+      // console.log('EventListener-----',self.qrCode)
     } else if (data.type == 'confirm_login') {
-      self.sub_title = 'Scan successful'
-      self.sub_desc = 'Confirm login on mobile WeChat'
+      self.sub_title = '扫描二维码成功'
+      self.sub_desc = '请稍等，微信登录正在做后续处理........'
       self.qrCode = data.extra;//头像
+      // self.$store.commit('wechat/SET_LOGIN',true)
     } else if (data.type == 'logged_in') {
       sessionStorage.setItem('user', JSON.stringify(data.user))
       self.$router.push({ path: '/main' })
@@ -48,6 +51,11 @@ function eventSourceListener() {
   source.addEventListener('error', function(event) {
     console.log("Failed to connect to event stream")
   }, false)
+
+  source.addEventListener('test', function(event) {
+    let data = JSON.parse(event.data)
+    console.log(data)
+  }, false)
 }
 
 export default {
@@ -57,8 +65,8 @@ export default {
         return {
           uuid: '',
           qrCode: `${process.env.VUE_APP_BASE_API}/static/img/qr_code.gif`,
-          sub_title: 'Scan to log in to WeChat',
-          sub_desc: 'Log in on phone to use WeChat on Web',
+          sub_title: '请扫描二维码登录微信',
+          sub_desc: '然后在手机上确定登录',
           notificationCount: 0
         }}
     })

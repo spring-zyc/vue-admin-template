@@ -6,6 +6,7 @@ const getters = {
   name: state => state.user.name,
   wechat: state => state.wechat.weChat,
   tabName: state => state.wechat.tabName,
-  tabIndex: state => state.wechat.tabindex
+  tabIndex: state => state.wechat.tabindex,
+  loginning: state => state.wechat.loginning
 }
 export default getters

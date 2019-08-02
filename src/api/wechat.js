@@ -15,9 +15,10 @@ export function login() {
   })
 }
 
-export function logout(bot_id) {
+export function logout(puid) {
   return request({
-    url: '/logout/wx',
+    url: '/logout/wx/'+puid,
     method: 'post'
+
   })
 }

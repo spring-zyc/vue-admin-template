@@ -2,6 +2,9 @@
 <div class="body">
     <div class="login">
         <div class="login_box">
+            <div v-if="loginning">
+              <p class="sub_title">正在登录微信请稍等.......</p>
+            </div>
             <div class="qrcode">
                 <img class="img" :src="qrCode">
                 <div>
@@ -26,15 +29,23 @@ import { requestLogin } from '../../api/api';
     name: 'WechatLogin',
     methods: {
       validate(res) {
-          let { msg, r } = res.data
-          if (r !== 0) {
-              this.$message({
-                  message: msg,
-                  type: 'error'
-              });
-              return false;
-          }
-          return true;
+        let {msg, r} = res.data
+        if (r !== 0) {
+          this.$message({
+            message: msg,
+            type: 'error'
+          });
+          return false;
+        }
+        return true;
+      }
+    },
+    mounted() {
+      this.$eventSourceListener()
+    },
+    computed: {
+      loginning() {
+        return this.$store.getters.loginning
       }
     }
   }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let base = '/j';
+let base = process.env.VUE_APP_BASE_API + '/j';
 
 const request = (url, options={}, method='get') => {
   let key = ~['delete', 'get', 'head'].indexOf(method) ? 'params' : 'data'
@@ -60,16 +60,16 @@ const addGroup = params => {
   return request(`${base}/groups`, params, 'put')
 }
 
-const getAllUsers = () => {
-  return request(`${base}/all_users`)
+const getAllUsers = (puid) => {
+  return request(`${base}/all_users/${puid}`)
 }
 
 const sendMessage = params => {
   return request(`${base}/send_message`, params, 'post')
 }
 
-const getAllGroups = () => {
-  return request(`${base}/all_groups`)
+const getAllGroups = (puid) => {
+  return request(`${base}/all_groups/${puid}`)
 }
 
 const getMsgList = params => {

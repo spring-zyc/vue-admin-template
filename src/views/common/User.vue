@@ -186,7 +186,7 @@
           wxid: ''
 				};
 
-        getAllUsers().then((res) => {
+        getAllUsers(this.puid).then((res) => {
           this.allOptions = res.data.users.map(item => {
             return { value: item.id, label: `${item.nick_name}|${item.avatar}`};
           });
