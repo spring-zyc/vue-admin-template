@@ -85,15 +85,30 @@ const actions = {
   // user logout
   logout({ commit, state }, tabName) {
 
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        resolve()
-      }).catch(error => {
-        reject(error)
+    const tabs = state.weChat
+    let activeName = state.tabName
+    if (activeName === tabName) {
+      tabs.forEach((tab, index) => {
+        if (tab.name === targetName) {
+          const nextTab = tabs[index + 1] || tabs[index - 1]
+          if (nextTab) {
+            activeName = nextTab.name
+          }
+        }
       })
+    }
+
+    state.tabName = activeName
+    state.weChat = tabs.filter(tab => tab.name !== targetName)
+    return new Promise((resolve, reject) => {
+      // logout(state.token).then(() => {
+      //   commit('SET_TOKEN', '')
+      //   removeToken()
+      //   resetRouter()
+      //   resolve()
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   }
 }

@@ -110,6 +110,7 @@ export default {
       //   if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
@@ -121,6 +122,10 @@ export default {
         // }
       // })
     }
+  },
+  mounted(){
+    this.$eventSourceListener()
+    console.log('event Source Listener finished')
   }
 }
 </script>

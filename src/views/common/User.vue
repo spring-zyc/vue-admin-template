@@ -6,7 +6,7 @@
 				<el-form-item>
 					<el-input v-model="filters.query" placeholder="姓名"></el-input>
 				</el-form-item>
-				<el-form-item>
+				<el-form-item
 					<el-button type="primary" v-on:click="getUsers">查询</el-button>
 				</el-form-item>
 				<el-form-item>
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-	import { getUserList, removeUser, addUser, addUsers, batchRemoveUser, getAllUsers, addGroup, flushData } from '../../api/api';
+	import { getUserList, removeUser, addUser, addUsers, batchRemoveUser, getAllUsers, addGroup, flushData } from '../../api/api'
 
 	export default {
 		data() {
@@ -119,7 +119,10 @@
 
 			}
 		},
-    props: ['queryType', 'gid','puid'],
+    props: {
+		  queryType: String,
+      puid: String
+    },
 		methods: {
 			formatSex (row, column) {
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
@@ -139,10 +142,12 @@
           gid: this.gid || '',
 					page: this.page,
 					q: this.filters.query,
-          type: this.queryType
+          type: this.queryType,
+          puid: this.puid
 				};
 
 				this.listLoading = true;
+        console.log('user vue',para)
 				getUserList(para).then((res) => {
 					this.total = res.data.total;
 					this.users = res.data.users;
@@ -169,7 +174,9 @@
         this.$confirm('确认重新拉取吗?', '提示', {
            type: 'warning'
          }).then(() => {
-           let para = { type: this.queryType };
+           let para = { type: this.queryType,
+                        puid: this.puid
+           };
            flushData(para).then((res) => {
              this.$notify({
                title: 'Success',

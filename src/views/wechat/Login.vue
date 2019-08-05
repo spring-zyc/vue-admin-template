@@ -41,7 +41,9 @@ import { requestLogin } from '../../api/api';
       }
     },
     mounted() {
+      console.log("Login")
       this.$eventSourceListener()
+      console.log('event Source Listener finished')
     },
     computed: {
       loginning() {

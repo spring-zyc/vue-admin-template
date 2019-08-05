@@ -1,33 +1,33 @@
 <template>
   <div>
-    <div class="navbar">
+     <div class="navbar">
+       {{userName}}
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
-            <!--<img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
-            <i class="el-icon-caret-bottom" />
+            <img :src="userAvatar+'?imageView2/1/w/80/h/80'" class="user-avatar"/>
+            <span>{{userName}}<i class="el-icon-caret-bottom" /></span>
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
             <router-link to="/">
               <el-dropdown-item>
-                Home
+               修改密码
               </el-dropdown-item>
             </router-link>
-            <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-              <el-dropdown-item>Github</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-              <el-dropdown-item>Docs</el-dropdown-item>
-            </a>
+            <!--<a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">-->
+              <!--<el-dropdown-item>Github</el-dropdown-item>-->
+            <!--</a>-->
+            <!--<a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">-->
+              <!--<el-dropdown-item>Docs</el-dropdown-item>-->
+            <!--</a>-->
             <el-dropdown-item divided>
               <span style="display:block;" @click="logout">Log Out</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-button @click="logout" />
       </div>
-    </div>
-    <el-tabs v-model="currentTabName" type="card" editable @edit="handleTabsEdit">
+  </div>
+    <el-tabs v-model="currentTabName" type="card" editable @edit="handleTabsEdit" >
 
       <el-tab-pane
         v-for="(item, index) in bots"
@@ -60,17 +60,28 @@ export default {
     currentTabName:{
       get(){
         return this.$store.getters.tabName
-      }
-    ,
+      },
       set(tabName){
         this.$store.commit('wechat/SET_TABNAME',tabName)
       }
+    },
+    userName(){
+      this.$store.getters.name
+    },
+    userAvatar(){
+      this.$store.getters.avatar
     }
   },
   async mounted() {
     try {
+      console.log("Main mounted")
       await this.$store.dispatch('wechat/list')
-      await this.$store.dispatch('wechat/login')
+      if (this.bots.length <= 0){
+        await this.$store.dispatch('wechat/login')
+      }else{
+        this.currentTabName = this.bots[0].name
+      }
+
     } catch (e) {
       console.log(e)
     }
@@ -83,21 +94,7 @@ export default {
         this.$store.dispatch('wechat/login').then().catch(err => console.log(err))
       }
       if (action === 'remove') {
-        const tabs = this.editableTabs
-        let activeName = this.editableTabsValue
-        if (activeName === targetName) {
-          tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-              const nextTab = tabs[index + 1] || tabs[index - 1]
-              if (nextTab) {
-                activeName = nextTab.name
-              }
-            }
-          })
-        }
-
-        this.editableTabsValue = activeName
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName)
+        this.$store.dispatch('wechat/logout').then().catch(err => console.log(err))
       }
     },
     async logout() {
@@ -118,23 +115,6 @@ export default {
     position: relative;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
-    .hamburger-container {
-      line-height: 46px;
-      height: 100%;
-      float: left;
-      cursor: pointer;
-      transition: background .3s;
-      -webkit-tap-highlight-color:transparent;
-
-      &:hover {
-        background: rgba(0, 0, 0, .025)
-      }
-    }
-
-    .breadcrumb-container {
-      float: left;
-    }
 
     .right-menu {
       float: right;

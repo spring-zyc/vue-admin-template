@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from 'axios'
 
-let base = process.env.VUE_APP_BASE_API + '/j';
+let base = process.env.VUE_APP_BASE_API + '/j'
 
 const request = (url, options={}, method='get') => {
   let key = ~['delete', 'get', 'head'].indexOf(method) ? 'params' : 'data'
@@ -20,12 +20,12 @@ const getUserList = params => {
   return request(`${base}/users`, params)
 }
 
-const getGroupSetings = _ => {
-  return request(`${base}/settings/group`)
+const getGroupSetings = puid_ => {
+  return request(`${base}/settings/group/${puid}`)
 }
 
-const updateGroupSetings = params => {
-  return request(`${base}/settings/group`, params, 'put')
+const updateGroupSetings = (puid, params) => {
+  return request(`${base}/settings/group/${puid}`, params, 'put')
 }
 
 const getGroupList = params => {
@@ -76,8 +76,8 @@ const getMsgList = params => {
   return request(`${base}/messages`, params)
 }
 
-const readAll = () => {
-  return request(`${base}/readall`, {}, 'post')
+const readAll = (puid) => {
+  return request(`${base}/readall/${puid}`, {}, 'post')
 }
 
 const flushData = params => {

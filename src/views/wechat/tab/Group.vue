@@ -51,6 +51,8 @@
 import { getGroupList, removeGroup, batchRemoveGroup, flushData } from '../../../api/api'
 
 export default {
+  props: ['puid'],
+
   data() {
     return {
       filters: {
@@ -63,6 +65,7 @@ export default {
       sels: [] // 列表选中列
     }
   },
+
   mounted() {
     this.getGroups()
   },
@@ -80,7 +83,7 @@ export default {
       this.$confirm('确认重新拉取群聊列表吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        const para = { type: 'group' }
+        const para = { type: 'group', puid: this.puid }
         flushData(para).then((res) => {
           this.$notify({
             title: 'Success',
@@ -93,7 +96,8 @@ export default {
     getGroups() {
       const para = {
         page: this.page,
-        q: this.filters.query
+        q: this.filters.query,
+        puid: this.puid
       }
       this.listLoading = true
       getGroupList(para).then((res) => {

@@ -20,6 +20,7 @@ function checkStatus(res, options = {}) {
 function eventSourceListener() {
   const base = process.env.VUE_APP_BASE_API
   const url = base + '/stream'
+  console.log('event Source Listener', url)
   let source = new EventSource(url)
   let self = this
   source.addEventListener('login', function(event) {
@@ -28,7 +29,7 @@ function eventSourceListener() {
     if (data.type == 'scan_qr_code') {
       self.uuid = data.uuid
       self.qrCode = `data:image/png;base64,${ data.extra}`//二维码
-      // console.log('EventListener-----',self.qrCode)
+      console.log('EventListener-----',self.qrCode)
     } else if (data.type == 'confirm_login') {
       self.sub_title = '扫描二维码成功'
       self.sub_desc = '请稍等，微信登录正在做后续处理........'
@@ -45,7 +46,8 @@ function eventSourceListener() {
 
   source.addEventListener('notification', function(event) {
     let data = JSON.parse(event.data)
-    self.notificationCount = data.count
+    console.log("收到消息通知",data)
+    self.notificationCount = data
   }, false)
 
   source.addEventListener('error', function(event) {
@@ -67,7 +69,7 @@ export default {
           qrCode: `${process.env.VUE_APP_BASE_API}/static/img/qr_code.gif`,
           sub_title: '请扫描二维码登录微信',
           sub_desc: '然后在手机上确定登录',
-          notificationCount: 0
+          notificationCount: {}
         }}
     })
     Vue.prototype.$checkStatus = checkStatus

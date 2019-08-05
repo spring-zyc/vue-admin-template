@@ -64,6 +64,7 @@ import { getMsgList } from '../../../api/api'
 // import { isEmptyObject } from '../common/js/util'
 
 export default {
+  props: ['puid'],
   data() {
     return {
       messages: [],
@@ -111,10 +112,12 @@ export default {
 
     getMessages() {
       const para = {
-        page: this.page
+        page: this.page,
+        puid: this.puid
       }
 
       this.listLoading = true
+      console.log('message vue',para)
       getMsgList(para).then((res) => {
         this.total = res.data.total
         this.messages = res.data.messages

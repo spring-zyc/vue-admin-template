@@ -94,6 +94,8 @@
 <script>
   import { getGroupSetings, updateGroupSetings } from '../../../api/api'
   export default {
+    name: 'Setting',
+    props: ['puid'],
     data() {
       return {
         allMembers: [],
@@ -114,10 +116,10 @@
       };
     },
     methods: {
-      getData () {
+      getData() {
         const users = [], mps = [], groups = [];
-
         getGroupSetings().then((res) => {
+          console.log("get Group settings",res.data)
           res.data.users.forEach((member, index) => {
             users.push({
               label: member.nick_name,
@@ -161,7 +163,7 @@
           'kick_quorum_n': this.kick_quorum_n
         };
         this.saveLoading = true;
-        updateGroupSetings(para).then((res) => {
+        updateGroupSetings(this.puid, para).then((res) => {
           this.$notify({
             title: 'Success',
             message: '更新群聊设置成功',
@@ -202,7 +204,7 @@
       }
     },
     mounted() {
-      this.getData();
+      this.getData()
     }
   }
 
