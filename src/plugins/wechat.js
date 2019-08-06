@@ -39,17 +39,42 @@ function eventSourceListener() {
       sessionStorage.setItem('user', JSON.stringify(data.user))
       self.$router.push({ path: '/main' })
     } else if (data.type == 'logged_out') {
-      sessionStorage.removeItem('user')
-      self.$router.push('/login')
+      self.$store.commit('wechat/CLOSE_TAB_BY_PUID', data.uuid)
+      alert('微信已经在客户端被关闭')
+      // sessionStorage.removeItem('user')
+      // self.$router.push('/login')
     }
   }, false)
 
   source.addEventListener('notification', function(event) {
     let data = JSON.parse(event.data)
+    let msg = ''
+    for (const i in self.$store.getters.wechat){
+      msg = msg + `<div>${i.name}收到${data[i.id]}条消息</div>`
+    }
+    self.$notify({
+      title: '提示',
+      message: msg,
+      duration: 0
+    })
     console.log("收到消息通知",data)
     self.notificationCount = data
   }, false)
 
+  source.addEventListener('mynotification', function(event) {
+    let data = JSON.parse(event.data)
+    let msg = ''
+    for (const i in self.$store.getters.wechat){
+      msg = msg + `<div>${i.name}收到${data[i.id]}条消息</div>`
+    }
+    self.$notify({
+      title: '提示',
+      message: msg,
+      duration: 0
+    })
+    console.log("收到消息通知",data)
+    self.mynotificationCount = data
+  }, false)
   source.addEventListener('error', function(event) {
     console.log("Failed to connect to event stream")
   }, false)
@@ -69,7 +94,8 @@ export default {
           qrCode: `${process.env.VUE_APP_BASE_API}/static/img/qr_code.gif`,
           sub_title: '请扫描二维码登录微信',
           sub_desc: '然后在手机上确定登录',
-          notificationCount: {}
+          notificationCount: {},
+          mynotificationCount: {}
         }}
     })
     Vue.prototype.$checkStatus = checkStatus

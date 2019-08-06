@@ -1,4 +1,5 @@
 import axios from 'axios'
+// var axios = require('axios')
 
 let base = process.env.VUE_APP_BASE_API + '/j'
 
@@ -76,6 +77,10 @@ const getMsgList = params => {
   return request(`${base}/messages`, params)
 }
 
+const getMyMsgList = params => {
+  return request(`${base}/messages/my`, params)
+}
+
 const readAll = (puid) => {
   return request(`${base}/readall/${puid}`, {}, 'post')
 }
@@ -84,7 +89,7 @@ const flushData = params => {
   return request(`${base}/flush`, params, 'post')
 }
 
-module.exports = {
+export   {
   requestLogin,
   requestLogout,
   getUserList,
@@ -102,6 +107,7 @@ module.exports = {
   getAllGroups,
   addGroup,
   getMsgList,
+  getMyMsgList,
   readAll,
   flushData
 };

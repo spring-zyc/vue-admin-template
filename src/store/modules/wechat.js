@@ -36,7 +36,27 @@ const mutations = {
   },
   SET_LOGIN: ( state, loginning) => {
     state.loginning = loginning
+  },
+  CLOSE_TAB( state, targetName){
+    const tabs = state.weChat
+    let activeName = state.tabName
+    if (activeName === targetName) {
+      tabs.forEach((tab, index) => {
+        if (tab.name === targetName) {
+          const nextTab = tabs[index + 1] || tabs[index - 1]
+          if (nextTab) {
+            activeName = nextTab.name
+          }
+        }
+      })
+    }
+    state.tabName = activeName
+    state.weChat = tabs.filter(tab => tab.name !== targetName)
+  },
+  CLOSE_TAB_BY_PUID( state, puid){
+    state.weChat = state.weChat.filter(tab => tab.id !== puid)
   }
+
 }
 
 const actions = {
@@ -83,34 +103,38 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }, tabName) {
-
-    const tabs = state.weChat
-    let activeName = state.tabName
-    if (activeName === tabName) {
-      tabs.forEach((tab, index) => {
+  logout({ commit, state }, puid, targetName) {
+    if (!puid && !targetName) {
+      return
+    }
+    let lPuid = puid
+    if (!puid){
+      state.weChat.forEach((tab, index) => {
         if (tab.name === targetName) {
-          const nextTab = tabs[index + 1] || tabs[index - 1]
-          if (nextTab) {
-            activeName = nextTab.name
-          }
+          lPuid = tab.id
+        }
+      })
+    }
+    let lTabName = targetName
+    if (!targetName){
+      state.weChat.forEach((tab, index) => {
+        if (tab.id === puid) {
+          lTabName = tab.name
         }
       })
     }
 
-    state.tabName = activeName
-    state.weChat = tabs.filter(tab => tab.name !== targetName)
     return new Promise((resolve, reject) => {
-      // logout(state.token).then(() => {
-      //   commit('SET_TOKEN', '')
-      //   removeToken()
-      //   resetRouter()
-      //   resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
+      logout(lPuid).then(() => {
+        commit('CLOSE_TAB', lTabName)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
     })
-  }
+  },
+
+
 }
 
 export default {

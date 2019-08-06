@@ -133,6 +133,7 @@ module.exports = {
               }
             })
           config.optimization.runtimeChunk('single')
+          config.resolve.symlinks(false)
         }
       )
   }

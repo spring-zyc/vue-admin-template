@@ -1,7 +1,8 @@
 <template>
   <div>
+    {{userName}}
      <div class="navbar">
-       {{userName}}
+
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
@@ -62,7 +63,7 @@ export default {
         return this.$store.getters.tabName
       },
       set(tabName){
-        this.$store.commit('wechat/SET_TABNAME',tabName)
+        this.$store.commit('wechat/SET_TABNAME', tabName)
       }
     },
     userName(){
@@ -94,7 +95,7 @@ export default {
         this.$store.dispatch('wechat/login').then().catch(err => console.log(err))
       }
       if (action === 'remove') {
-        this.$store.dispatch('wechat/logout').then().catch(err => console.log(err))
+        this.$store.dispatch('wechat/logout', null, targetName).then().catch(err => console.log(err))
       }
     },
     async logout() {
@@ -113,8 +114,8 @@ export default {
     height: 50px;
     overflow: hidden;
     position: relative;
-    background: #fff;
-    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    /*background: #fff;*/
+    /*box-shadow: 0 1px 4px rgba(0,21,41,.08);*/
 
     .right-menu {
       float: right;

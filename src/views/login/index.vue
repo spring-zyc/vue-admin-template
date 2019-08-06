@@ -122,10 +122,6 @@ export default {
         // }
       // })
     }
-  },
-  mounted(){
-    this.$eventSourceListener()
-    console.log('event Source Listener finished')
   }
 }
 </script>
